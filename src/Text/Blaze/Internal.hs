@@ -56,6 +56,7 @@ import           Data.Monoid   (Monoid, mappend, mconcat, mempty)
 import           Data.Typeable (Typeable)
 import           GHC.Exts      (IsString (..))
 import           Unsafe.Coerce (unsafeCoerce)
+import           Control.Monad (ap)
 -------------------------------------------------------------------------------
 
 -- | A static string that supports efficient output to all possible backends.
@@ -139,6 +140,10 @@ instance Monoid a => Monoid (MarkupM a) where
 instance Functor MarkupM where
     -- Safe because it does not contain a value anyway
     fmap _ = unsafeCoerce
+
+instance Applicative MarkupM where
+  pure  = return
+  (<*>) = ap
 
 instance Monad MarkupM where
     return _ = Empty
